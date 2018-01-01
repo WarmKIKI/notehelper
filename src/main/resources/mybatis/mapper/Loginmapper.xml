@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.manage.dao.LoginDao">
+	<resultMap type="com.cn.manage.model.UserEntity" id="UserEntity">
+		<id property="userId" column="user_id" />
+		<result property="username" column="username" />
+		<result property="email" column="email" />
+		<result property="password" column="password"  />
+		<result property="userImg" column="user_img"  />
+		<result property="userRank" column="usr_rank"  />
+		<result property="userAuthority" column="user_authority"/>
+		<result property="userIdentity"  column="user_identity"/>
+		<result property="userPhone"  column="user_phone"/>
+		<result property="userAddress" column="user_address"/>
+		<result property="userEducation" column="user_education"/>
+		<result property="userBrithday" column="user_brithday"  jdbcType="DATE"/>
+	</resultMap>
+<!-- 
+	<sql id="user_column">
+		user.user_id AS userId,
+		user.username AS username,
+		user.email AS email,
+		user.password AS password,
+		user.userImg AS userImg,
+		user.userRank AS userRank
+	</sql>
+
+	<sql id="user_where">
+		<where>
+			1 = 1
+			<if test="userId != null and userId !=''">
+				AND user.userId =# {userId}
+			</if>
+			<if test="username != null and username !=''">
+				AND user.username =# {username}
+			</if>
+			<if test="email!= null and email!=''">
+				AND user.email =# {email}
+			</if>
+			<if test="password != null and password!=''">
+				AND user.password =# {password}
+			</if>	
+		</where>
+	</sql>
+
+	<sql id="user_table">
+		FROM user as user
+	</sql> -->
+	
+	<select id="queryByEmail" resultMap="UserEntity">
+		SELECT * FROM user WHERE email=#{email}
+	</select>
+
+	<select id="queryUsername" resultType="java.lang.String">
+		SELECT name FROM user WHERE email=#{email}
+	</select>
+</mapper>

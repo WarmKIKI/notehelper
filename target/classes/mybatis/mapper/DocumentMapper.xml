@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.cn.manage.dao.DocumentDao">
+    <resultMap type="com.cn.manage.model.DocumentEntity" id="DocumentEntity">
+        <id property="docId" column="doc_id" />
+        <result property="docTitle" column="doc_title" />
+        <result property="docAuthor" column="doc_author" />
+        <result property="docPublish" column="doc_publish"  />
+        <result property="docPubtime" column="doc_pubtime"  />
+        <result property="docSummary" column="doc_summary"  />
+        <result property="isPdf" column="is_pdf"  />
+    </resultMap>
+<insert id="addDocument" parameterType="com.cn.manage.model.DocumentEntity"  useGeneratedKeys="true" keyProperty="docId" keyColumn="doc_id">
+    insert into document(doc_title,doc_author,doc_publish,doc_pubtime,doc_summary,is_pdf)
+    VALUES (#{docTitle},#{docAuthor},#{docPublish},#{docPubtime},#{docSummary},#{isPdf})
+</insert>
+
+<select id="QueryAllDocument" resultType="java.util.Map">
+     select * from  document
+     order by doc_id
+     limit #{BeginIndex} ,#{EndIndex}
+</select>
+
+
+</mapper>

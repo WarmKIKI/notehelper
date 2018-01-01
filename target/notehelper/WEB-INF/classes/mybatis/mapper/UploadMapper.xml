@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.cn.manage.dao.UploadDao">
+
+        <resultMap type="com.cn.manage.model.UploadEntity" id="UploadEntity">
+            <id property="upId" column="up_id" />
+            <result property="docId" column="doc_Id" />
+            <result property="userId" column="user_Id" />
+            <result property="upTime" column="up_time"  />
+        </resultMap>
+
+
+    <!--
+        <insert id="addUpload" parameterType="com.cn.manage.model.UploadEntity">
+            insert into document(up_id,doc_id,user_id,up_time)
+            VALUES (#{upId},#{docId},#{userId},#{upTime})
+        </insert>-->
+
+    <insert id="addUpload" parameterType="com.cn.manage.model.UploadEntity"  useGeneratedKeys="true" keyProperty="upId">
+        insert into upload(up_id,doc_id,user_id,up_time)
+        VALUES (#{upId},#{docId},#{userId},#{upTime})
+    </insert>
+
+
+</mapper>

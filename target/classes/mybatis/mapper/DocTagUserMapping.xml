@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.cn.manage.dao.DocTagUserDao">
+    <resultMap type="com.cn.manage.model.DocTagUserEntity" id="DocTagUserEntity">
+        <id property="Id" column="id" />
+        <result property="tagId" column="tag_id" />
+        <result property="docId" column="docId" />
+        <result property="userId" column="userId" />
+    </resultMap>
+
+    <insert id="addDocTagUser" parameterType="com.cn.manage.model.TaglibEntity" >
+        insert into user_tag_doc(id,tag_id,doc_id,user_id)
+        VALUES (#{id},#{tagId},#{docId},#{userId})
+    </insert>
+
+</mapper>

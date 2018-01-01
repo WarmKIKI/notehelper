@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.cn.manage.dao.TaglibDao">
+    <resultMap type="com.cn.manage.model.TaglibEntity" id="TaglibEntity">
+        <id property="tagId" column="tag_id" />
+        <result property="tagName" column="tag_name" />
+    </resultMap>
+    <!--<insert id="addDocument" parameterType="com.cn.manage.model.DocumentEntity">
+        insert into document(doc_id,doc_title,doc_author,doc_publish,doc_pubtime,doc_summary,is_pdf)
+        VALUES (#{docId},#{docTitle},#{docAuthor},#{docPublish},#{docPubtime},#{docSummary},#{isPdf})
+    </insert>-->
+
+    <insert id="addTaglib" parameterType="com.cn.manage.model.TaglibEntity" >
+        insert into taglib(tag_id,tag_name)
+        VALUES (#{tagId},#{tagName})
+    </insert>
+
+   <select id="queryTaglib" resultType="java.util.Map">
+       select * from taglib
+   </select>
+</mapper>

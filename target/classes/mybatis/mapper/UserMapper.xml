@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="com.cn.manage.dao.UserDao">
+<resultMap type="com.cn.manage.model.UserEntity" id="UserEntity">
+		<id property="userId" column="user_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="password" column="password"  />
+		<result property="userImg" column="user_img"  />
+		<result property="userRank" column="user_rank"  />
+		<result property="userIdentity"  column="user_identity"/>
+		<result property="userPhone"  column="user_phone"/>
+		<result property="userAddress" column="user_address"/>
+		<result property="userEducation" column="user_education"/>
+		<result property="userBrithday" column="user_brithday" />
+	</resultMap>
+   <update id="changeOldPwd" parameterType="com.cn.manage.model.UserEntity">
+     UPDATE user SET password=#{password} where user_id=#{userId}
+   </update>
+
+	<!--<insert id="addUser" parameterType="com.cn.manage.model.UserEntity">
+     insert into  user (user_id,username,email,password,user_img,user_rank,user_identity,user_phone,user_address,user_education,user_brithday)
+     VALUES (#{userId},#{username},#{email},#{password},#{userImg},#{userRank},#{userIdentity},#{userPhone},#{userAddress},#{userEducation},#{userBrithday})
+   </insert>-->
+
+	<insert id="addUser" parameterType="com.cn.manage.model.UserEntity">
+		insert into  user (user_id,name,email,password,user_img)
+		VALUES (#{userId},#{name},#{email},#{password},#{userImg})
+	</insert>
+
+	<update id="updateUserImg" parameterType="com.cn.manage.model.UserEntity">
+		UPDATE user SET user_img=#{userImg} where user_id=#{userId}
+	</update>
+
+	<select  id="queryEmailMap"  resultType="java.lang.String">
+		select email from  user
+	</select>
+
+</mapper>
+
