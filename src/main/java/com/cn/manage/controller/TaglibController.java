@@ -29,7 +29,7 @@ public class TaglibController {
     /**
      * 显示Taglib
      */
-    @RequestMapping(value= "showTaglib",method= RequestMethod.GET)
+    @RequestMapping(value= "showTaglib",method= RequestMethod.POST)
     @ResponseBody
     public String showTaglib(){
         return JSON.toJSONString(taglibQueryService.queryTaglib());

@@ -23,7 +23,7 @@ public class addDocumentTest {
           DocumentVo doc=new DocumentVo();
           doc.setDocAuthor("WarmCheng");
           doc.setDocPublish("清华大学出版社");
-          doc.setDocTitle("南城北事4");
+          doc.setDocTitle("南城北事17");
           doc.setDocPubtime(new Date(2017/11/18));
           doc.setDocSummary("********");
           doc.setIsPdf(1);

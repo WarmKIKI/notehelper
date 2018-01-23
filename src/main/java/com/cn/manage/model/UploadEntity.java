@@ -10,7 +10,7 @@ public class UploadEntity {
     private int upId;
     private int docId;
     private int userId;
-    private Date upTime;
+    private Date upTime=new Date(System.currentTimeMillis());
     private String upContent;
 
 

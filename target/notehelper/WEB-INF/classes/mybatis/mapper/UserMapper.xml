@@ -37,5 +37,9 @@
 		select email from  user
 	</select>
 
+	<select id="queryNameById" resultType="java.lang.String" parameterType="java.util.Map">
+		select name from user where user_id=#{operateId}
+	</select>
+
 </mapper>
 

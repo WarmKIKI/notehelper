@@ -10,7 +10,9 @@ public class DocumentInsertServiceImpl implements DocumentInsertService {
     @Resource(name = "documentDao")
     private DocumentDao documentDao;
 
+    /**添加文章*/
     public int addDocument(DocumentEntity documentEntity) {
         return documentDao.addDocument(documentEntity);
     }
+
 }

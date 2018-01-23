@@ -44,6 +44,3 @@ public class RegisterController {
     }
 }
 
-/*  @RequestParam(value="email",required = true)String email,
-    @RequestParam(value = "name",required = true)String name,
-    @RequestParam(value="password",required = true)String password*/

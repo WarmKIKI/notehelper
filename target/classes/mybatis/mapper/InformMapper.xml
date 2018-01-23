@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.manage.dao.InformDao" >
+    <resultMap id="informEntity" type="com.cn.manage.model.InformEntity">
+        <id property="inId" column="in_id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="operateId" column="operate_id"></result>
+        <result property="docId" column="doc_id"></result>
+        <result property="inContent" column="in_content"></result>
+        <result property="inCheck" column="in_check"></result>
+        <result property="inType" column="in_type"></result>
+        <result property="inTime" column="in_time"></result>
+    </resultMap>
+
+    <insert id="addInform" parameterType="com.cn.manage.model.InformEntity">
+        insert into  inform(user_id,operate_id,doc_id,in_content,in_check,in_type,in_time)
+        values (#{userId},#{operateId},#{docId},#{inContent},#{inCheck},#{inType},#{inTime})
+    </insert>
+
+    <select id="queryCheck" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(in_check) from inform  where in_check=0 and user_id=#{userId};
+    </select>
+
+    <select id="queryInform" parameterType="java.util.Map" resultType="java.util.Map">
+        select * from inform where user_id=#{userId} and in_check=0
+    </select>
+</mapper>

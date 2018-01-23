@@ -10,12 +10,47 @@
         <result property="docPubtime" column="doc_pubtime"  />
         <result property="docSummary" column="doc_summary"  />
         <result property="isPdf" column="is_pdf"  />
+        <association property="uploadEntity" javaType="com.cn.manage.model.UploadEntity">
+            <id property="upId" column="up_id"></id>
+            <result property="upContent" column="up_content"></result>
+            <result property="docId" column="doc_id"></result>
+            <result property="userId" column="user_id"></result>
+            <result property="upTime" column="up_time"></result>
+        </association>
     </resultMap>
-<insert id="addDocument" parameterType="com.cn.manage.model.DocumentEntity">
-    insert into document(doc_id,doc_title,doc_author,doc_publish,doc_pubtime,doc_summary,is_pdf)
-    VALUES (#{docId},#{docTitle},#{docAuthor},#{docPublish},#{docPubtime},#{docSummary},#{isPdf})
-</insert>
 
+    <insert id="addDocument" parameterType="com.cn.manage.model.DocumentEntity"  useGeneratedKeys="true" keyProperty="docId" keyColumn="doc_id">
+        insert into document(doc_title,doc_author,doc_publish,doc_pubtime,doc_summary,is_pdf)
+        VALUES (#{docTitle},#{docAuthor},#{docPublish},#{docPubtime},#{docSummary},#{isPdf})
+    </insert>
+
+    <select id="QueryAllDocument" resultType="java.util.Map">
+         select *  from  document
+         order by doc_id
+         limit #{BeginIndex} ,#{PageSize}
+    </select>
+
+
+    <select id="QueryMyDocument" resultType="DocumentEntity" parameterType="java.util.Map">
+        select *  from  document  where  doc_id IN (
+        select doc_id from upload where  user_id=#{UserId}
+        )
+        limit #{BeginIndex} ,#{PageSize}
+    </select>
+
+
+    <insert id="addCollet" parameterType="java.util.Map" useGeneratedKeys="true"  keyColumn="follow_id">
+          insert into  user_doc(doc_id,user_id)
+          VALUES (#{docId},#{userId})
+    </insert>
+
+    <delete id="removeCollect"  parameterType="java.util.Map">
+        DELETE from user_doc where doc_id=#{docId} and user_id=#{userId}
+    </delete>
+
+    <select id="queryNamebyId" resultType="java.lang.String" parameterType="java.util.Map">
+        select doc_title from document where doc_id=#{docId}
+    </select>
 
 
 </mapper>

@@ -17,6 +17,10 @@ public static final String DATABASEFAIL="0001";
 /**数据库处理失败消息*/
 public static final String DATABASEFAIL_MSG="数据库操作失败！";
 
+/**通知类型*/
+public static final int  COMMMENTTYPE=0;
+public static final int  COLLECTTYPE=1;
+
     /**
      * 用户的token码
      **/

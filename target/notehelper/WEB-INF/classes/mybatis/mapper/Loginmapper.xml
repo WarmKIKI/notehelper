@@ -52,7 +52,7 @@
 		SELECT * FROM user WHERE email=#{email}
 	</select>
 
-	<select id="queryUsername" resultType="java.lang.String">
+	<select id="queryUsername" resultType="java.lang.String" >
 		SELECT name FROM user WHERE email=#{email}
 	</select>
 </mapper>

@@ -3,7 +3,9 @@ package com.cn.manage.controller;
 import com.alibaba.fastjson.JSON;
 import com.cn.manage.Vo.DocumentVo;
 import com.cn.manage.exception.DatabaseException;
+import com.cn.manage.exception.ServiceException;
 import com.cn.manage.model.*;
+import com.cn.manage.service.DocumentInsertService;
 import com.cn.manage.service.UserInsertService;
 import com.cn.manage.service.biz.DocumentBizService;
 import com.cn.manage.service.biz.QueryBizService;
@@ -14,6 +16,7 @@ import com.cn.manage.utils.SysConstant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +41,8 @@ public class DocumentController {
     private UserInsertService userInsertService;
     @Resource(name="queryBizService")
     private QueryBizService queryBizService;
+
+
     private static final Logger logger = LoggerFactory.getLogger(DocumentController.class);
 
 
@@ -56,38 +61,160 @@ public class DocumentController {
     }
 
     /**
-     * 分页文章
-     * @param PageIndex
+     * 分页总文章
+     * @param BeginIndex
      * @param PageSize
      * @return
      */
     @RequestMapping(value="/show",method = RequestMethod.POST)
-    @ResponseBody
-    public String  ShowDocument(@RequestParam(value="PageIndex",required = true)int PageIndex,@RequestParam(value="PageSize",required = true)int PageSize){
-        ResponseEntity rs=null;
+    public String  ShowDocument(@RequestParam(value="BeginIndex",required = true)int BeginIndex,@RequestParam(value="PageSize",required = true)int PageSize){
+        ResponseEntity rs=new ResponseEntity();
         List<DocumentEntity> documentEntityList=null;
+        Map<String,Object> map=new HashMap<String, Object>();
         try {
-            documentEntityList = queryBizService.QueryDocument(PageIndex, PageSize);
-            Map<String,Object> map=new HashMap<String, Object>();
+            documentEntityList = queryBizService.QueryDocument(BeginIndex, PageSize);
             map.put("Document",documentEntityList);
             rs.setStatus(SysConstant.SUCCESS).setStatus(SysConstant.SUCCESS_MSG).setResult(map);
+            return JSON.toJSONString(rs);
         }catch(DatabaseException e){
             rs.setStatus(e.getErrorCode()).setStatus(e.getErrorMessage());
+            map.put("error",rs);
+            return JSON.toJSONString(map);
         }
-        return JSON.toJSONString(rs);
+
+    }
+
+    /**分页我的文章*/
+    @RequestMapping(value="/MyShow",method=RequestMethod.POST)
+    public String ShowMyDocument(@RequestParam(value="BeginIndex",required=true)int BeginIndex,@RequestParam(value="PageIndex",required=true)int PageSize, HttpServletRequest request){
+        ResponseEntity rs=new ResponseEntity();
+        int userId= GetFieldUtil.GetId(request.getHeader("token"));
+        List<DocumentEntity> documentEntityList=null;
+        Map<String,Object> map=new HashMap<String, Object>();
+        try {
+            documentEntityList = queryBizService.QueryMyDocument(BeginIndex, PageSize,userId);
+            map.put("Document",documentEntityList);
+            rs.setStatus(SysConstant.SUCCESS).setStatus(SysConstant.SUCCESS_MSG).setResult(map);
+            return JSON.toJSONString(rs);
+        }catch(DatabaseException e){
+            rs.setStatus(e.getErrorCode()).setStatus(e.getErrorMessage());
+            map.put("error",rs);
+            return JSON.toJSONString(map);
+        }
+
+    }
+
+
+    /**收藏文章*/
+    @RequestMapping(value ="/Follow",method=RequestMethod.POST)
+    public String Collect(@RequestParam(value="docId")int docId, HttpServletRequest request){
+        ResponseEntity rs=new ResponseEntity();
+        int userId=GetFieldUtil.GetId(request.getHeader("token"));
+        try{
+            documentBizService.addCollect(docId,userId);
+            rs.setStatus(SysConstant.SUCCESS).setStatus(SysConstant.SUCCESS_MSG);
+            return JSON.toJSONString(rs);
+        }catch(DatabaseException e){
+            rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+            Map<String,Object> map=new HashMap<String, Object>();
+            map.put("error",rs);
+            return JSON.toJSONString(map);
+        }
+
+    }
+
+    /**取消关注文章*/
+    @RequestMapping(value="/remove",method=RequestMethod.POST)
+    public String  removeCollect(@RequestParam(value="docId")int docId,@RequestParam(value="userId")int userId){
+     ResponseEntity rs=new ResponseEntity();
+     try {
+         documentBizService.removeCollect(docId, userId);
+         rs.setStatus(SysConstant.SUCCESS).setStatus(SysConstant.SUCCESS_MSG);
+         return JSON.toJSONString(rs);
+     }catch (DatabaseException e){
+         rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+         Map<String,Object> map=new HashMap<String, Object>();
+         map.put("error",rs);
+         return JSON.toJSONString(map);
+     }
+    }
+
+
+    /**评论某文章*/
+    @RequestMapping(value="/Comment")
+    public String Comment(@RequestBody CommentEntity commentEntity){
+        ResponseEntity rs=new ResponseEntity();
+        Map<String,Object> map=new HashMap<String, Object>();
+        try {
+            documentBizService.addComment(commentEntity);
+            rs.setStatus(SysConstant.SUCCESS).setStatus(SysConstant.SUCCESS_MSG);
+        }catch(DatabaseException e){
+            rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+        }catch (ServiceException e){
+            rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+        }finally {
+            if(rs.getStatus()==SysConstant.SUCCESS)
+                return JSON.toJSONString(rs);
+            else{
+                map.put("error",rs);
+                return JSON.toJSONString(map);
+            }
+        }
+
+    }
+
+    /**动态消息提醒*/
+    @RequestMapping(value="/remind",method=RequestMethod.POST)
+    public String  remind(@RequestParam(value="userId")int userId){
+        ResponseEntity rs=new ResponseEntity();
+        Map<String,Object> map=new HashMap<String, Object>();
+        try {
+            int number = documentBizService.remind(userId);
+            map.put("number",number);
+            rs.setStatus(SysConstant.SUCCESS).setMessage(SysConstant.SUCCESS_MSG).setResult(map);
+            return JSON.toJSONString(rs);
+        }catch(DatabaseException e){
+            rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+            map.put("error",rs);
+            return JSON.toJSONString(map);
+        }
+
+    }
+
+
+    /**显示动态消息*/
+    @RequestMapping(value = "/showMessage",method=RequestMethod.POST)
+    @ResponseBody
+    public String  showMessage(@RequestParam(value="userId")int userId){
+        ResponseEntity rs=new ResponseEntity();
+        Map<String,Object> map=new HashMap<String,Object>();
+        try {
+            List<Map<String, Object>> list = documentBizService.queryInform(userId);
+            map.put("list",list);
+            rs.setStatus(SysConstant.SUCCESS).setMessage(SysConstant.SUCCESS_MSG).setResult(map);
+            return JSON.toJSONString(rs);
+        }catch(DatabaseException e){
+            rs.setStatus(e.getErrorCode()).setMessage(e.getErrorMessage());
+            map.put("error",rs);
+            return JSON.toJSONString(map);
+        }
+    }
+
+
+    /**批量导入文章*/
+    public String BatchImport(@RequestParam(value = "text")String text){
+
+        return null;
     }
 
 
 
     /**
      * 上传头像接口
-     *
      * @param
      * @return
      */
-
     @RequestMapping(value = "/uploadImgUrl", method = RequestMethod.POST)
-    @ResponseBody
     public String fileUpload( @RequestParam("file") MultipartFile file, HttpServletRequest request)
     {
         ResponseEntity rs=new ResponseEntity(SysConstant.SUCCESS,SysConstant.SUCCESS_MSG);
@@ -110,10 +237,9 @@ public class DocumentController {
                     userEntity.setUserId(userId);
                     userInsertService.updateUserImg(userEntity);
             } catch (Exception e) {
-               logger.info("文件上传失败",e.getMessage());
-               rs.setStatus(SysConstant.FAIL).setMessage(SysConstant.FAIL_MSG);
+                logger.info("文件上传失败", e.getMessage());
+                rs.setStatus(SysConstant.FAIL).setMessage(SysConstant.FAIL_MSG);
             }
-
         }
         return  JSON.toJSONString(rs);
     }
@@ -123,7 +249,7 @@ public class DocumentController {
      */
     @RequestMapping(value="/upload",method=RequestMethod.POST)
     public String fileUpload(@RequestParam("file")CommonsMultipartFile file){
-        ResponseEntity rs=null;
+        ResponseEntity rs=new ResponseEntity();
         rs.setStatus(SysConstant.SUCCESS).setMessage(SysConstant.SUCCESS_MSG);
         if(file.isEmpty()){
             rs.setStatus(SysConstant.FAIL);

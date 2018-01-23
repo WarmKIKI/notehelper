@@ -8,19 +8,21 @@
             <result property="docId" column="doc_Id" />
             <result property="userId" column="user_Id" />
             <result property="upTime" column="up_time"  />
+            <result property="upContent" column="up_content"/>
         </resultMap>
 
 
-    <!--
-        <insert id="addUpload" parameterType="com.cn.manage.model.UploadEntity">
-            insert into document(up_id,doc_id,user_id,up_time)
-            VALUES (#{upId},#{docId},#{userId},#{upTime})
-        </insert>-->
-
-    <insert id="addUpload" parameterType="com.cn.manage.model.UploadEntity"  useGeneratedKeys="true" keyProperty="upId">
-        insert into upload(up_id,doc_id,user_id,up_time)
-        VALUES (#{upId},#{docId},#{userId},#{upTime})
+    <insert id="addUpload" parameterType="com.cn.manage.model.UploadEntity"  useGeneratedKeys="true" keyProperty="upId" keyColumn="up_id">
+        insert into upload(up_content,doc_id,user_id,up_time)
+        VALUES (#{upContent},#{docId},#{userId},#{upTime})
     </insert>
 
+    <select id="queryUpId" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select up_id from upload where doc_id=#{docId}
+    </select>
+
+    <select id="queryUserId" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select user_id from upload where doc_id=#{docId}
+    </select>
 
 </mapper>

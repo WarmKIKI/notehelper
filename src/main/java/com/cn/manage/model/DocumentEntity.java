@@ -15,8 +15,15 @@ public class DocumentEntity {
     private Date docPubtime;
     private String docSummary;
     private int isPdf;
+    private UploadEntity uploadEntity;
 
+    public UploadEntity getUploadEntity() {
+        return uploadEntity;
+    }
 
+    public void setUploadEntity(UploadEntity uploadEntity) {
+        this.uploadEntity = uploadEntity;
+    }
 
     public int getDocId() {
         return docId;

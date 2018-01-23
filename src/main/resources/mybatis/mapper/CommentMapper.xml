@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.manage.dao.CommentDao">
+    <resultMap id="commentEntity" type="com.cn.manage.model.CommentEntity">
+        <id property="mId" column="m_id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="mContent" column="m_content"></result>
+        <result property="mTime" column="m_time"></result>
+        <result property="docId" column="doc_id"></result>
+        <result property="mMark" column="m_mark"></result>
+    </resultMap>
+
+    <insert id="addComment" parameterType="com.cn.manage.model.CommentEntity"  useGeneratedKeys="true" keyProperty="mId" keyColumn="m_id">
+        insert into  comment(user_id,m_content,m_time,doc_id,m_mark)
+        values (#{userId},#{mContent},#{mTime},#{docId},#{mMark})
+    </insert>
+
+    <select  id="queryById" parameterType="java.util.Map" resultType="java.lang.Integer" >
+        select user_id from  comment  where m_id=#{mMark}
+    </select>
+
+</mapper>
